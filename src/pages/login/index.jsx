@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button } from 'antd';
-import logo from './logo.png';
-import './index.less'
-const Item = Form.Item;
+import logo from './logo.png'; // 引入图片资源：在React脚手架中图片必须引入才会打包
+import './index.less' // import 必须在最上面
+const Item = Form.Item; // 缓存一下
 class Login extends Component {
   login = (e) => {
     e.preventDefault();
+  }
+  validator = (rule, value, callback) => {
+    // console.log(rule, value)
+    const name = rule.fullField === 'username' ? '用户名' : '密码';
+    if (!value) {
+      callback(`请输入${name}!`)
+    }else if (value.length < 4) {
+      callback(`${name}必须大于4位`)
+    }else if (value.length >10) {
+      callback(`${name}必须小于10位`)
+    }else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+      callback(`${name}只能包含英文字母数字下划线`)
+    }
   }
   render() {
     // getFieldDecorator也是一个高阶组件
@@ -23,10 +36,13 @@ class Login extends Component {
               getFieldDecorator(
                 'username', {
                   rules: [
-                    { required: true, message: '请输入用户名!' },
+                    /*{ required: true, message: '请输入用户名!' },
                     { max: 10, message: '用户名必须小于10位'},
                     { min: 4, message: '用户名必须大于4位'},
-                    { pattern: /^[a-zA-Z0-9_]+$/, message: '用户名只能包含英文字母数字下划线'}
+                    { pattern: /^[a-zA-Z0-9_]+$/, message: '用户名只能包含英文字母数字下划线'}*/
+                    {
+                      validator: this.validator
+                    }
                     ],
                 }
               )(<Input className="login-input" placeholder="用户名" type="text" prefix={<Icon type="user" />}/>)
@@ -38,10 +54,13 @@ class Login extends Component {
               getFieldDecorator(
                 'password', {
                   rules: [
-                    { required: true, message: '请输入密码！'},
+                    /*{ required: true, message: '请输入密码！'},
                     { max: 15, message: '密码必须小于15位'},
                     { min: 4, message: '密码必须大于4位'},
-                    { pattern: /^[a-zA-Z0-9_]+$/, message: '密码只能包含英文字母数字下划线'}
+                    { pattern: /^[a-zA-Z0-9_]+$/, message: '密码只能包含英文字母数字下划线'}*/
+                    {
+                      validator: this.validator
+                    }
                   ],
                 }
               )(<Input className="login-input" placeholder="密码" type="password" prefix={<Icon type="lock" />}/>)
