@@ -6,6 +6,19 @@ const Item = Form.Item; // 缓存一下
 class Login extends Component {
   login = (e) => {
     e.preventDefault();
+    // validateFields这个方法有三个参数，第一个参数用来提示错误，第二个参数为输入的值，第三个参数为空，一般不传
+    this.props.form.validateFields((error, values) => {
+      console.log(values);
+      if (!error) {
+        // 校验通过
+        const { username, password } = values;
+        console.log(username, password);
+        console.log('登陆表单验证成功~');
+      }else {
+        // 校验失败
+        console.log('登陆表单验证失败~');
+      }
+    })
   }
   validator = (rule, value, callback) => {
     // console.log(rule, value)
@@ -18,7 +31,10 @@ class Login extends Component {
       callback(`${name}必须小于10位`)
     }else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
       callback(`${name}只能包含英文字母数字下划线`)
+    }else {
+      callback(); // 不传参代表校验通过，传参代表校验失败
     }
+
   }
   render() {
     // getFieldDecorator也是一个高阶组件
