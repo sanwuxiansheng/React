@@ -26,7 +26,7 @@ class Login extends Component {
                     { required: true, message: '请输入用户名!' },
                     { max: 10, message: '用户名必须小于10位'},
                     { min: 4, message: '用户名必须大于4位'},
-                    { pattern: /^[a-zA-Z0-9_$]+$/, message: '用户名只能包含英文字母数字、下划线和$'}
+                    { pattern: /^[a-zA-Z0-9_]+$/, message: '用户名只能包含英文字母数字下划线'}
                     ],
                 }
               )(<Input className="login-input" placeholder="用户名" type="text" prefix={<Icon type="user" />}/>)
@@ -34,7 +34,19 @@ class Login extends Component {
 
           </Item>
           <Item>
-            <Input className="login-input" placeholder="密码" type="password" prefix={<Icon type="lock" />}/>
+            {
+              getFieldDecorator(
+                'password', {
+                  rules: [
+                    { required: true, message: '请输入密码！'},
+                    { max: 15, message: '密码必须小于15位'},
+                    { min: 4, message: '密码必须大于4位'},
+                    { pattern: /^[a-zA-Z0-9_]+$/, message: '密码只能包含英文字母数字下划线'}
+                  ],
+                }
+              )(<Input className="login-input" placeholder="密码" type="password" prefix={<Icon type="lock" />}/>)
+            }
+
           </Item>
           <Item>
             <Button type="primary" htmlType="submit" className="login-btn">登录</Button>
