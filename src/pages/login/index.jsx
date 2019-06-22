@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Form, Icon, Input, Button, message } from 'antd';
-import { reqLogin } from '../../api';
+import React, {Component} from 'react';
+import {Form, Icon, Input, Button, message} from 'antd';
+import {reqLogin} from '../../api';
 import logo from '../../assets/images/logo.png'; // 引入图片资源：在React脚手架中图片必须引入才会打包
 import './index.less' // import 必须在最上面
 const Item = Form.Item; // 缓存一下
@@ -12,18 +12,18 @@ class Login extends Component {
       console.log(values);
       if (!error) {
         // 校验通过
-        const { username, password } = values;
+        const {username, password} = values;
         console.log(username, password);
         console.log('登陆表单验证成功~');
         const result = await reqLogin(username, password);
         if (result) {
           // 登陆成功
           this.props.history.replace('/');
-        }else {
+        } else {
           // 登陆失败 清空密码
           this.props.form.resetFields(['password'])
         }
-      }else {
+      } else {
         // 校验失败
         console.log('登陆表单验证失败~');
       }
@@ -34,20 +34,21 @@ class Login extends Component {
     const name = rule.fullField === 'username' ? '用户名' : '密码';
     if (!value) {
       callback(`请输入${name}!`)
-    }else if (value.length < 4) {
+    } else if (value.length < 4) {
       callback(`${name}必须大于4位`)
-    }else if (value.length >10) {
+    } else if (value.length > 10) {
       callback(`${name}必须小于10位`)
-    }else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+    } else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
       callback(`${name}只能包含英文字母数字下划线`)
-    }else {
+    } else {
       callback(); // 不传参代表校验通过，传参代表校验失败
     }
 
   }
+
   render() {
     // getFieldDecorator也是一个高阶组件
-    const { getFieldDecorator } = this.props.form;
+    const {getFieldDecorator} = this.props.form;
     return <div className="login">
       <header className='login-header'>
         <img src={logo} alt="logo"/>
@@ -68,9 +69,9 @@ class Login extends Component {
                     {
                       validator: this.validator
                     }
-                    ],
+                  ],
                 }
-              )(<Input className="login-input" placeholder="请输入用户名" type="text" prefix={<Icon type="user" />}/>)
+              )(<Input className="login-input" placeholder="请输入用户名" type="text" prefix={<Icon type="user"/>}/>)
             }
 
           </Item>
@@ -88,7 +89,7 @@ class Login extends Component {
                     }
                   ],
                 }
-              )(<Input className="login-input" placeholder="请输入密码" type="password" prefix={<Icon type="lock" />}/>)
+              )(<Input className="login-input" placeholder="请输入密码" type="password" prefix={<Icon type="lock"/>}/>)
             }
 
           </Item>
@@ -101,6 +102,7 @@ class Login extends Component {
     </div>;
   }
 }
+
 // 返回值是一个包装组件   <Form(Login)><Login><Form(Login)>
 // 通过Form(Login)包装组件向Login组件中传递form属性
 export default Form.create()(Login)

@@ -13,10 +13,11 @@ export default class Admin extends Component {
   };
 
   render() {
+    const {collapsed} = this.state
     return (
       <Layout style={{ minHeight: '100vh' }}>
-        <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-         <LeftNav/>
+        <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
+         <LeftNav collapsed={collapsed}/>
         </Sider>
         <Layout>
           <Header style={{ background: '#fff', padding: 0 }} />
@@ -25,9 +26,9 @@ export default class Admin extends Component {
               <Breadcrumb.Item>User</Breadcrumb.Item>
               <Breadcrumb.Item>Bill</Breadcrumb.Item>
             </Breadcrumb>
-            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>Bill is a cat.</div>
+            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>欢迎使用硅谷后台管理系统</div>
           </Content>
-          <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+          <Footer style={{ textAlign: 'center' }}>推荐使用谷歌浏览器，可以获得更佳页面操作体验</Footer>
         </Layout>
       </Layout>
     );
