@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button, message } from 'antd';
-import axios from 'axios';
+import { reqLogin } from '../../api';
 import logo from './logo.png'; // 引入图片资源：在React脚手架中图片必须引入才会打包
 import './index.less' // import 必须在最上面
 const Item = Form.Item; // 缓存一下
@@ -8,36 +8,21 @@ class Login extends Component {
   login = (e) => {
     e.preventDefault();
     // validateFields这个方法有三个参数，第一个参数用来提示错误，第二个参数为输入的值，第三个参数为空，一般不传
-    this.props.form.validateFields((error, values) => {
+    this.props.form.validateFields(async (error, values) => {
       console.log(values);
       if (!error) {
         // 校验通过
         const { username, password } = values;
         console.log(username, password);
         console.log('登陆表单验证成功~');
-        axios.post('/login', { username, password })
-          .then((res) => {
-            const data = res.data;
-            if ( data.status === 0) {
-              // 请求成功 跳转到admin主界面
-              {/*<Redirect to="/"> 推荐使用在render方法中 */}
-              {/*  this.props.history.push('/') 推荐使用在回调函数中 */}
-              // replace不会保存跳转记录，push会保存跳转记录
-              // 因为登陆成功不需要返回登录页面了~所以使用replace
-              this.props.history.replace('/')
-            }else {
-              // 全局提示错误
-              message.error(data.msg,2);
-              // 产生错误时，将密码重置为空
-              this.props.form.resetFields(['password'])
-            }
-          })
-          .catch((error) => {
-            // 一般是网络问题和服务器内部问题
-            message.error('网络出现异常，请重新刷新~',2)
-            // 产生错误时，将密码重置为空
-            this.props.form.resetFields(['password'])
-          })
+        const result = await reqLogin(username, password);
+        if (result) {
+          // 登陆成功
+          this.props.history.replace('/');
+        }else {
+          // 登陆失败 清空密码
+          this.props.form.resetFields(['password'])
+        }
       }else {
         // 校验失败
         console.log('登陆表单验证失败~');

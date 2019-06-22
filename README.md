@@ -37,4 +37,12 @@
   * git clone url 将远程仓库克隆下载到本地
   * git checkout -b dev origin/dev 克隆仓库后切换到dev分支
 * 创建项目基本结构
+* 代理服务器：
+  * 用来解决开发环境时的跨域问题
+  * 在package.json中添加代理服务器的发送地址"proxy": "http://localhost:5000" 
+* 路由组件：
+* 路由组件都有的三大属性
+  * history:
+  * location:
+  * match:
   
