@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button, message } from 'antd';
 import { reqLogin } from '../../api';
-import logo from './logo.png'; // 引入图片资源：在React脚手架中图片必须引入才会打包
+import logo from '../../assets/images/logo.png'; // 引入图片资源：在React脚手架中图片必须引入才会打包
 import './index.less' // import 必须在最上面
 const Item = Form.Item; // 缓存一下
 class Login extends Component {
