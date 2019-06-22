@@ -61,7 +61,7 @@ class Login extends Component {
                     }
                     ],
                 }
-              )(<Input className="login-input" placeholder="用户名" type="text" prefix={<Icon type="user" />}/>)
+              )(<Input className="login-input" placeholder="请输入用户名" type="text" prefix={<Icon type="user" />}/>)
             }
 
           </Item>
@@ -79,7 +79,7 @@ class Login extends Component {
                     }
                   ],
                 }
-              )(<Input className="login-input" placeholder="密码" type="password" prefix={<Icon type="lock" />}/>)
+              )(<Input className="login-input" placeholder="请输入密码" type="password" prefix={<Icon type="lock" />}/>)
             }
 
           </Item>
