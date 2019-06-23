@@ -55,6 +55,7 @@ class LeftNav extends Component {
         return this.addmenu(menu)
       }
     });
+    // 初始化选中的菜单
     this.selectedKeys = pathname
   }
 
