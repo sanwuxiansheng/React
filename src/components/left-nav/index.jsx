@@ -24,7 +24,7 @@ class LeftNav extends Component {
   // componentWillMount一般用来做渲染之前的准备工作,在render之前只做一次
   // 所以根据登录用户的不同生成不同的侧边列表在componentWillMount完成
   componentWillMount() {
-
+    const { pathname } = this.props.location
     this.menus = menuList.map((menu) => {
       // 缓存
       const { children } = menu;
@@ -41,7 +41,13 @@ class LeftNav extends Component {
           }
         >
           {
-            children.map((item) => this.addmenu(item))
+            children.map((item) => {
+              if (item.key === pathname) {
+                // 说明当前地址是一个二级菜单，需要展开当前二级菜单所属的一级菜单,初始化展开的菜单
+                this.openKey = menu.key
+              }
+              return this.addmenu(item)
+            })
           }
         </SubMenu>
       } else {
@@ -49,7 +55,7 @@ class LeftNav extends Component {
         return this.addmenu(menu)
       }
     });
-    this.selectedKeys = this.props.location.pathname
+    this.selectedKeys = pathname
   }
 
   render() {
@@ -61,7 +67,7 @@ class LeftNav extends Component {
         <img src={logo} alt=""/>
         <h1 style={{display: collapsed ? 'none' : 'block'}}>硅谷后台</h1>
       </Link>
-      <Menu theme="dark" defaultSelectedKeys={[this.selectedKeys]} mode="inline">
+      <Menu theme="dark" defaultSelectedKeys={[this.selectedKeys]} defaultOpenKeys={[this.openKey]} mode="inline">
         {
           this.menus
         }
