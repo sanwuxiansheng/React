@@ -3,6 +3,7 @@ import { Layout } from 'antd';
 import LeftNav from '../../components/left-nav';
 import HeaderMain from '../../components/haerd';
 import { getItem } from '../../utils/login-tools';
+import { reqValidateUserInfo } from '../../api';
 const { Header, Content, Footer, Sider } = Layout;
 export default class Admin extends Component {
   state = {
@@ -13,11 +14,19 @@ export default class Admin extends Component {
     this.setState({ collapsed });
   };
 
-  componentWillMount() {
+  async componentWillMount() {
     const user = getItem();
-    if ( !user || !user._id) {
-      this.props.history.replace('/login');
+    if ( user || user._id) {
+      // 发送请求验证 用户信息是否合法
+      // 如果用户是通过登录进来的，就不需要跳转到登陆界面。如果用户是使用之前的值，刷新访问进行来，就需要跳转到登陆界面
+      /*this.props.history.replace('/login');
+      const result = reqValidateUserInfo(user._id)
+      if (result) return;
+      this.props.history.replace('/login');*/
+      const result = await reqValidateUserInfo(user._id);
+      if (result) return;
     }
+    this.props.history.replace('/login');
   }
 
   render() {
