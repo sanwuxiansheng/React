@@ -1,6 +1,7 @@
 import React from 'react';
-import {Form, Icon, Input, Button, message} from 'antd';
-import {reqLogin} from '../../api';
+import { Form, Icon, Input, Button} from 'antd';
+import { reqLogin } from '../../api';
+import { setItem } from '../../utils/login-tools';
 import logo from '../../assets/images/logo.png'; // 引入图片资源：在React脚手架中图片必须引入才会打包
 import './index.less' // import 必须在最上面
 
@@ -17,12 +18,14 @@ function Login(props) {
         if (!error) {
           // 校验通过
           const {username, password} = values;
-          console.log(username, password);
           console.log('登陆表单验证成功~');
           const result = await reqLogin(username, password);
           if (result) {
             // 登陆成功
-            this.props.history.replace('/');
+            // 只有在登录成功的时候才能拿到用户信息
+            setItem(result);
+            props.history.replace('/');
+            console.log('wowowow');
           } else {
             // 登陆失败 清空密码
             this.props.form.resetFields(['password'])

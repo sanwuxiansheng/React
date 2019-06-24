@@ -12,7 +12,6 @@ export default function ajax(url, data = {}, method = 'GET') {
       params: data
     }
   };
-  debugger;
   return axios[method](url, reqParams)
     .then((res) => {
       const data = res.data;

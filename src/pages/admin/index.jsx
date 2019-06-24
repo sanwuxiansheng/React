@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import {Layout, Breadcrumb} from 'antd';
+import { Layout } from 'antd';
 import LeftNav from '../../components/left-nav';
 import HeaderMain from '../../components/haerd';
+import { getItem } from '../../utils/login-tools';
 const { Header, Content, Footer, Sider } = Layout;
 export default class Admin extends Component {
   state = {
@@ -9,9 +10,15 @@ export default class Admin extends Component {
   };
 
   onCollapse = collapsed => {
-    console.log(collapsed);
     this.setState({ collapsed });
   };
+
+  componentWillMount() {
+    const user = getItem();
+    if ( !user || !user._id) {
+      this.props.history.replace('/login');
+    }
+  }
 
   render() {
     const {collapsed} = this.state
