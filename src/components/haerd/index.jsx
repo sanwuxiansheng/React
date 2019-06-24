@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import dayjs from 'dayjs';
-import logo from '../../assets/images/logo.png';
 import MyButton from '../my-button';
 import { withRouter } from 'react-router-dom';
 import { reqWeather } from '../../api';

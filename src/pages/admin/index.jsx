@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
 import { Layout } from 'antd';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import LeftNav from '../../components/left-nav';
 import HeaderMain from '../../components/haerd';
 import { getItem } from '../../utils/login-tools';
 import { reqValidateUserInfo } from '../../api';
+
+import Home from '../home';
+import User from '../user';
+import Product from '../product';
+import Category from '../category';
+import Bar from '../charts/bar';
+import Line from '../charts/line';
+import Pie from '../charts/pie';
+import Role from '../role';
+
 const { Header, Content, Footer, Sider } = Layout;
 export default class Admin extends Component {
   state = {
@@ -41,7 +52,19 @@ export default class Admin extends Component {
             <HeaderMain/>
           </Header>
           <Content style={{ margin: '25px 16px' }}>
-            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>欢迎使用硅谷后台管理系统</div>
+            <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+              <Switch>
+                <Route path='/home' component={Home}/>
+                <Route path='/product' component={Product}/>
+                <Route path='/category' component={Category}/>
+                <Route path='/user' component={User}/>
+                <Route path='/role' component={Role}/>
+                <Route path='/charts/bar' component={Bar}/>
+                <Route path='/charts/line' component={Line}/>
+                <Route path='/charts/pie' component={Pie}/>
+                <Redirect to='/home'/>
+              </Switch>
+            </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>推荐使用谷歌浏览器，可以获得更佳页面操作体验</Footer>
         </Layout>
