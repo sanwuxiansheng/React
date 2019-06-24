@@ -1,7 +1,22 @@
 import React, { Component } from 'react';
 import { Card, Button, Icon, Table  } from 'antd';
 import MyButton from '../../components/my-button';
+import { reqCategory } from '../../api';
+import './index.less';
+
 export default class Category extends Component {
+  state = {
+    categories: [],
+  };
+  async componentDidMount() {
+    const result = await reqCategory('0');
+    if (result) {
+      this.setState({
+        categories: result
+      });
+    }
+  }
+
   render() {
     // 表头内容
     const columns = [
@@ -11,7 +26,7 @@ export default class Category extends Component {
       },
       {
         title: '操作',
-        className: 'column-money',
+        className: 'category-operation',
         dataIndex: 'money',
         render: text => {
           return <div>
@@ -22,7 +37,7 @@ export default class Category extends Component {
       },
     ];
 
-    const data = [
+    /*const data = [
       {
         key: '1',
         name: '勒布朗.詹姆斯',
@@ -43,12 +58,12 @@ export default class Category extends Component {
         name: '凯文.乐福',
         money: '￥120,000.00',
       },
-    ];
+    ];*/
     return <div>
       <Card title="一级列表分类" extra={<Button type='primary'><Icon type="plus" />添加品类</Button>}>
         <Table
           columns={columns}
-          dataSource={data}
+          dataSource={this.state.categories}
           bordered
           pagination={{
             pageSizeOptions: [3,6,9,12],
