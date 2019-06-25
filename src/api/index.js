@@ -40,3 +40,4 @@ export const reqWeather = function() {
 
 // 请求Category一级列表分类
 export const reqCategory =  (parentId) => ajax('/manage/category/list', {parentId});
+export const reqAddCategory = (parentId, categoryName) => ajax('/manage/category/add', {parentId, categoryName}, 'POST');
