@@ -44,17 +44,24 @@ class HeardMain extends Component {
 
   }
   async componentDidMount() {
-    setInterval(() => {
+    this.timer = setInterval(() => {
       this.setState({
         sysTime: Date.now()
       })
     },1000);
     // 发送请求天气
-    const result = await reqWeather();
+    const { promise, cancel } = reqWeather();
+    this.cancel = cancel;
+    const result = await promise;
     if (result) {
       this.setState(result)
     }
-  }
+  };
+  // 组件卸载时，清除定时器和ajax请求
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    this.cancel();
+  };
 
   showConfirm() {
     confirm({
@@ -71,7 +78,7 @@ class HeardMain extends Component {
         console.log('Cancel');
       },
     });
-  }
+  };
 
   render() {
     const { sysTime, dayPictureUrl, weather} = this.state;

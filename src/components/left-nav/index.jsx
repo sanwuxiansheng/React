@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
 
 import {Icon, Menu} from "antd";
-import { Link , withRouter } from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 // withRouter是一个高阶组件用来给非路由组件传递路由组件的三大属性(history,location,match)
 import logo from '../../assets/images/logo.png';
 import './index.less'
 import PropTypes from 'prop-types';
 import menuList from '../../config/menu-config';
+
 const {SubMenu} = Menu;
 const {Item} = Menu;
+
 class LeftNav extends Component {
   static propTypes = {
     collapsed: PropTypes.bool.isRequired
@@ -25,12 +27,13 @@ class LeftNav extends Component {
   // 所以根据登录用户的不同生成不同的侧边列表在componentWillMount完成
   // componentDidMount一般用来做渲染之后只做一次的准备工作
   componentWillMount() {
-    const { pathname } = this.props.location
+    const {pathname} = this.props.location;
+    let isHome = true;
     this.menus = menuList.map((menu) => {
       // 缓存
-      const { children } = menu;
+      const {children} = menu;
       // 判断菜单等级是一级菜单还是二级菜单
-      if(children) {
+      if (children) {
         // 二级菜单
         return <SubMenu
           key={menu.key}
@@ -45,24 +48,26 @@ class LeftNav extends Component {
             children.map((item) => {
               if (item.key === pathname) {
                 // 说明当前地址是一个二级菜单，需要展开当前二级菜单所属的一级菜单,初始化展开的菜单
-                this.openKey = menu.key
+                this.openKey = menu.key;
+                isHome = false
               }
               return this.addmenu(item)
             })
           }
         </SubMenu>
       } else {
+          if (menu.key === pathname) isHome = false;
         // 一级菜单
         return this.addmenu(menu)
       }
     });
     // 初始化选中的菜单
-    this.selectedKeys = pathname
+    this.selectedKeys = isHome ? '/home' : pathname;
   }
 
   render() {
 
-    const {collapsed} = this.props
+    const {collapsed} = this.props;
     return <div>
       <Link className="nav-logo" to='/home'>
         <img src={logo} alt=""/>
@@ -76,4 +81,5 @@ class LeftNav extends Component {
     </div>;
   }
 }
+
 export default withRouter(LeftNav)

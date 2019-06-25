@@ -17,8 +17,9 @@ export const reqLogin = (username, password) => ajax('/login', {username, passwo
 export const reqValidateUserInfo = (id) => ajax('/validate/user',{id}, 'POST');
 // 请求天气
 export const reqWeather = function() {
-  return new Promise((resolve, reject) => {
-    jsonp(`http://api.map.baidu.com/telematics/v3/weather?location=深圳&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`, {} ,function (err, data) {
+  let cancel = null;
+  const promise = new Promise((resolve, reject) => {
+    cancel = jsonp(`http://api.map.baidu.com/telematics/v3/weather?location=深圳&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`, {} ,function (err, data) {
       if (!err) {
         const { weather, dayPictureUrl } = data.results[0].weather_data[0];
         resolve({
@@ -29,8 +30,12 @@ export const reqWeather = function() {
           message.error('请求天气失败，请重新刷新试试~');
           resolve()
       }
-    })
-  })
+    });
+  });
+  return {
+    promise,
+    cancel
+  }
 };
 
 // 请求Category一级列表分类
