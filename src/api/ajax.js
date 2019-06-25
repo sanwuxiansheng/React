@@ -16,8 +16,8 @@ export default function ajax(url, data = {}, method = 'GET') {
     .then((res) => {
       const data = res.data;
       if ( data.status === 0) {
-        // 请求成功 返回成功的数据
-        return data.data
+        // 请求成功 返回成功的数据 因为请求是异步代码当最开始没有值的时候所以需要返回一个{}防止对象点的方式报错
+        return data.data || {}
       }else {
         // 全局提示错误
         message.error(data.msg,2);
