@@ -45,4 +45,25 @@
   * history:
   * location:
   * match:
-  
+* 如果非路由组件想使用路由组件的三大属性可以通过withRouter
+* ithRouter是一个高阶组件用来给非路由组件传递路由组件的三大属性(history,location,match)
+  * 先通过引入import {withRouter} from 'react-router-dom';
+  * 然后将要使用三大属性的非路由组件传进来并调用即可
+    * export default withRouter(LeftNav);
+* 生命周期函数
+  * componentWillMount():
+    * 一般用来做渲染之前只做一次的准备工作,在render之前只做一次
+  * componentDidMount():
+    * 一般用来做渲染之后只做一次的准备工作
+  * componentWillUnmount():
+    * 组件将要卸载时，清除定时器和ajax请求等只做一次
+  * shouldComponentUpdate():
+     * 组件在更新前，会自动被执行，这个钩子函数返回一个布尔值，来决定组件之后是否被更新。
+  * componentWillUpdate()
+    * 在组件更新之前，它会自动执行，但是他在shouldComponentUpdate之后执行。 如果shouldComponentUpdate返回true，它会执行，否则不会执行。
+  * componentDidUpdate():
+    * 组件更新之后立即执行
+  * (props更新特有)componentWillRecieveProps:
+    * 不过props更新了会另外执行一个生命周期函数componentWillRecieveProps,那么它在什么时候执行呢？
+    * 如果一个组件从父组件接受了数据，只要父组件的render函数被重新执行了，那么这个componentWillRecieveProps才会被执行。这个生命周期函数不是太常用。
+    
