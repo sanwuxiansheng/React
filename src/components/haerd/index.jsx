@@ -15,8 +15,11 @@ class HeardMain extends Component {
     weather: '多云',
     dayPictureUrl: 'http://api.map.baidu.com/images/weather/day/duoyun.png'
   }
+  // 还没有渲染前做的
   componentWillMount() {
     this.username = getItem().username;
+    // 确定title
+    this.title = this.getTitle(this.props);
   };
   componentWillReceiveProps(nextProps) {
     this.title = this.getTitle(nextProps)
@@ -24,8 +27,13 @@ class HeardMain extends Component {
 
   // 获取当前所在的菜单项
   getTitle = (nextProps) => {
-    console.log('getTile');
-    const { pathname } = nextProps.location;
+    // console.log('getTile');
+    let { pathname } = nextProps.location;
+
+    const pathnameReg = /^\/product\//;
+    if (pathnameReg.test(pathname)) {
+      pathname = pathname.slice(0, 8);
+    }
     for (let i = 0; i < menuList.length; i++) {
       const menu = menuList[i];
       if (menu.children) {

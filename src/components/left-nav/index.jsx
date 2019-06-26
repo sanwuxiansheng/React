@@ -27,7 +27,11 @@ class LeftNav extends Component {
   // 所以根据登录用户的不同生成不同的侧边列表在componentWillMount完成
   // componentDidMount一般用来做渲染之后只做一次的准备工作
   componentWillMount() {
-    const {pathname} = this.props.location;
+    let {pathname} = this.props.location;
+    const pathnameReg = /^\/product\//;
+    if (pathnameReg.test(pathname)) {
+      pathname = pathname.slice(0, 8);
+    }
     let isHome = true;
     this.menus = menuList.map((menu) => {
       // 缓存
