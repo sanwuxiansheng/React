@@ -40,6 +40,8 @@ export const reqWeather = function() {
 
 // 请求Category一级列表分类
 export const reqCategory =  (parentId) => ajax('/manage/category/list', {parentId});
+// 添加一级列表分类
 export const reqAddCategory = (parentId, categoryName) => ajax('/manage/category/add', {parentId, categoryName}, 'POST');
+// 修改列表分类名称
 export const reqUpdateCategoryName = (categoryId, categoryName) => ajax('/manage/category/update',{categoryId, categoryName}, 'POST');
 export const reqProducts = (pageNum, pageSize) => ajax('/manage/product/list', {pageNum, pageSize});

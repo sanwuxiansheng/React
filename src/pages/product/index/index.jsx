@@ -18,7 +18,9 @@ export default class Index extends Component {
       })
     }
   };
-
+  showAddProduct = () => {
+    this.props.history.push('/product/saveupdate')
+  };
   render() {
     const { products, isLoading } = this.state;
     const columns = [
@@ -66,7 +68,7 @@ export default class Index extends Component {
         <Button type="primary">搜索</Button>
       </div>
     }
-      extra={<Button type="primary"><Icon type='plus'></Icon>添加产品</Button>}
+      extra={<Button type="primary" onClick={this.showAddProduct}><Icon type='plus'></Icon>添加产品</Button>}
     >
       <Table
         columns={columns}
