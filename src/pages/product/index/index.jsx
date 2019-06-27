@@ -65,7 +65,7 @@ export default class Index extends Component {
         title: '操作',
         render: (product) => {
           return <div>
-            <MyButton onClick={this.showAddProduct}>详情</MyButton>
+            <MyButton onClick={this.showUpdateProduct(product)}>详情</MyButton>
             <MyButton onClick={this.showUpdateProduct(product)}>修改</MyButton>
           </div>
         }

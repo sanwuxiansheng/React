@@ -47,3 +47,5 @@ export const reqUpdateCategoryName = (categoryId, categoryName) => ajax('/manage
 export const reqProducts = (pageNum, pageSize) => ajax('/manage/product/list', {pageNum, pageSize});
 // 添加商品请求
 export const reqAddProduct = ({ name, desc, price, categoryId, pCategoryId, detail}) => ajax('/manage/product/add', {name, desc, price, categoryId, pCategoryId, detail}, 'POST');
+
+export const reqUpdataProduct = ({name, desc, price, categoryId, pCategoryId, detail, _id}) => ajax('/manage/product/update', {name, desc, price, categoryId, pCategoryId, detail, _id}, 'POST');

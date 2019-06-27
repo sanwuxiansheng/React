@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Card, Icon, Form, Input, Button, Cascader, InputNumber } from 'antd';
-import {reqCategory, reqAddProduct} from '../../../api';
+import {reqCategory, reqAddProduct, reqUpdataProduct} from '../../../api';
 
 import RichTextEditor from './rich-text-editor';
 
 import './index.less';
 import draftToHtml from "draftjs-to-html";
 import {convertToRaw} from "draft-js";
+import PictureWall from "./picture-wall";
 
 
 const {Item} = Form;
@@ -93,7 +94,8 @@ class SaveUpdate extends Component {
   };
   // 添加商品
   addProduct = (e) => {
-    console.log('addProduct');
+    const product = this.props.location.state;
+    // console.log('addProduct');
     e.preventDefault();// 取消表单提交的一些默认事件
     // 验证表单数据
     this.props.form.validateFields(async (err, values) => {
@@ -110,8 +112,18 @@ class SaveUpdate extends Component {
           pCategoryId = categoriesId[0];
           categoryId = categoriesId[1]
         }
+        let promise = null;
+        const options = { name, desc, price, categoryId, pCategoryId, detail }
         // 发送请求，请求商品数据
-        const result = await reqAddProduct({ name, desc, price, categoryId, pCategoryId, detail });
+        if (product) {
+          // 修改商品
+          options._id = product._id;
+          promise = reqUpdataProduct (options)
+        } else {
+          // 添加商品
+          promise = reqAddProduct(options);
+        }
+        const result = await promise;
         if (result) {
           // 请求数据成功，需要返回到商品页面，并将新添加的商品进行展示
           this.props.history.push('/product/index');
@@ -213,6 +225,9 @@ class SaveUpdate extends Component {
           }
 
         </Item>
+        {product ? <Item label="商品图片" >
+          <PictureWall imgs={product ? product.imgs : []} id={product ? product._id : ''}/>
+        </Item> : ''}
         <Item label='商品详情'></Item>
         <Item wrapperCol={{span:20}}>
           <RichTextEditor ref={this.richTextEditorRef} detail={product ? product.detail : ''}/>
