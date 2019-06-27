@@ -8,11 +8,20 @@ export default class Index extends Component {
   state = {
     products: [], // 商品管理数据
     isLoading: true, // 是否显示loading图
+    total: 0
   };
-  async componentDidMount() {
-    const result = await reqProducts(1, 3)
+  componentDidMount() {
+    this.getProducts(1, 3)
+  };
+
+  getProducts = async (pageNum, pageSize) => {
+    this.setState({
+      loading: true
+    });
+    const result = await reqProducts(pageNum, pageSize);
     if (result) {
       this.setState({
+        total: result.total,
         products: result.list,
         isLoading: false
       })
@@ -22,7 +31,7 @@ export default class Index extends Component {
     this.props.history.push('/product/saveupdate')
   };
   render() {
-    const { products, isLoading } = this.state;
+    const { products, isLoading, total } = this.state;
     const columns = [
       {
         title: '商品名称',
@@ -78,7 +87,10 @@ export default class Index extends Component {
           showQuickJumper: true,
           showSizeChanger: true,
           pageSizeOptions: ['3', '6', '9', '12'],
-          defaultPageSize: 3
+          defaultPageSize: 3,
+          total,
+          onChange: this.getProducts,
+          onShowSizeChange: this.getProducts
         }}
         rowKey='_id'
         loading={isLoading}

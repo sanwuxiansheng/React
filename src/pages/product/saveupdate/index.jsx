@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import { Card, Icon, Form, Input, Button, Cascader, InputNumber } from 'antd';
-import {reqCategory} from '../../../api';
+import {reqCategory, reqAddProduct} from '../../../api';
 
 import RichTextEditor from './rich-text-editor';
 
 import './index.less';
+import draftToHtml from "draftjs-to-html";
+import {convertToRaw} from "draft-js";
+
 
 const {Item} = Form;
-export default class SaveUpdate extends Component {
+class SaveUpdate extends Component {
 
   state = {
     options: [],
@@ -28,9 +31,9 @@ export default class SaveUpdate extends Component {
       })
     }
   }
-
+  richTextEditorRef = React.createRef();
+  // 加载二级分类数据
   loadData = async selectedOptions => {
-
     // 获取数组中的最后一项数据
     const targetOption = selectedOptions[selectedOptions.length - 1];
     // console.log(targetOption);
@@ -53,14 +56,39 @@ export default class SaveUpdate extends Component {
       })
     }
   };
+  // 添加商品
   addProduct = (e) => {
-    e.preventDefault()
+    console.log('addProduct');
+    e.preventDefault();// 取消表单提交的一些默认事件
+    // 验证表单数据
+    this.props.form.validateFields(async (err, values) => {
+      // console.log(this.richTextEditorRef);
+      if (!err) {
+        const {editorState} = this.richTextEditorRef.current.state;
+        const detail = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+        const { name, desc, price, categoriesId } = values;
+        let pCategoryId = '0';
+        let categoryId = '';
+        if (categoriesId.length === 1) {
+          categoryId = categoriesId[0]
+        } else {
+          pCategoryId = categoriesId[0];
+          categoryId = categoriesId[1]
+        }
+        // 发送请求，请求商品数据
+        const result = await reqAddProduct({ name, desc, price, categoryId, pCategoryId, detail });
+        if (result) {
+          // 请求数据成功，需要返回到商品页面，并将新添加的商品进行展示
+          this.props.history.push('/product/index');
+        }
+      }
+    })
   };
   goProduct = () => {
     this.props.history.push('/product/index')
   };
   render() {
-
+    const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -75,32 +103,81 @@ export default class SaveUpdate extends Component {
     return <Card title={<div className='product-title'><Icon type='arrow-left' className='arrow-icon' onClick={this.goProduct}/><span>添加商品</span></div>}>
       <Form {...formItemLayout} onSubmit={this.addProduct}>
         <Item label='商品名称'>
-          <Input placeholder='请输入商品名称'/>
+          {
+            getFieldDecorator(
+              'name',
+              {
+                rules:[
+                  {required: true, message: '请输入商品名称'}
+                ]
+              }
+            )(
+              <Input placeholder='请输入商品名称'/>
+            )
+          }
         </Item>
         <Item label='商品描述'>
-          <Input placeholder='请输入商品描述'/>
+          {
+            getFieldDecorator(
+              'desc',
+              {
+                rules:[
+                  {required: true, message: '请输入商品描述'}
+                ]
+              }
+            )(
+              <Input placeholder='请输入商品描述'/>
+            )
+          }
+
         </Item>
         <Item label='请选择分类' wrapperCol={{span:5}}>
-          <Cascader
-            options={options}
-            loadData={this.loadData}
-            changeOnSelect
-          />
+          {
+            getFieldDecorator(
+              'categoriesId',
+              {
+                rules: [
+                  {required: true, message: '请选择分类'}
+                ]
+              }
+            )(
+              <Cascader
+                options={options}
+                loadData={this.loadData}
+                changeOnSelect
+                placeholder='请选择分类'
+              />
+            )
+          }
+
         </Item>
         <Item label='商品价格'>
-          <InputNumber
-            formatter={value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            parser={value => value.replace(/￥\s?|(,*)/g, '')}
-            className='input-number'
-          />
+          {
+            getFieldDecorator(
+              'price',
+              {
+                rules: [
+                  {required: true, message: '请输入商品价格'}
+                ]
+              }
+            )(
+              <InputNumber
+                formatter={value => `￥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                parser={value => value.replace(/￥\s?|(,*)/g, '')}
+                className='input-number'
+              />
+            )
+          }
+
         </Item>
         <Item label='商品详情'></Item>
         <Item wrapperCol={{span:20}}>
-          <RichTextEditor/>
+          <RichTextEditor ref={this.richTextEditorRef}/>
 
-          <Button type='primary' className='submit-button' htmlType='submit'>提交</Button>
+          <Button type='primary' className='submit-button' htmlType="submit">提交</Button>
         </Item>
       </Form>
     </Card>;
   }
 }
+export default Form.create()(SaveUpdate)
