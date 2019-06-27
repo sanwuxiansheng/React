@@ -30,6 +30,11 @@ export default class Index extends Component {
   showAddProduct = () => {
     this.props.history.push('/product/saveupdate')
   };
+  showUpdateProduct = (product) => {
+    return () => {
+      this.props.history.push('/product/saveupdate', product)
+    }
+  };
   render() {
     const { products, isLoading, total } = this.state;
     const columns = [
@@ -60,8 +65,8 @@ export default class Index extends Component {
         title: '操作',
         render: (product) => {
           return <div>
-            <MyButton>详情</MyButton>
-            <MyButton>修改</MyButton>
+            <MyButton onClick={this.showAddProduct}>详情</MyButton>
+            <MyButton onClick={this.showUpdateProduct(product)}>修改</MyButton>
           </div>
         }
       },

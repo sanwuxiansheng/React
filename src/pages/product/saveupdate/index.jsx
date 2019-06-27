@@ -17,19 +17,24 @@ class SaveUpdate extends Component {
   };
 
   // 发送请求、请求一级分类数据
-  async componentDidMount() {
-    const result = await reqCategory('0');
-    if (result) {
-      this.setState({
-        options: result.map((item) => {
-          return {
-            value: item._id,
-            label: item.name,
-            isLeaf: false,
-          }
-        })
-      })
+  componentDidMount() {
+    this.getCategories('0');
+    /*
+      如果是一级分类：pCategoryId: 0  categoryId: 一级分类id
+      如果是二级分类：pCategoryId:一级分类id  categoryId: 二级分类id
+     */
+    const product = this.props.location.state;
+    let categoriesId = [];
+    if (product) {
+      if (product.pCategoryId !== '0') {
+        categoriesId.push(product.pCategoryId);
+        // 当点击修改商品时该项商品为二级分类则需要请求二级分类数据
+        this.getCategories(product.pCategoryId);
+      }
+      categoriesId.push(product.categoryId)
     }
+    this.categoriesId = categoriesId;
+    // console.log(categoriesId);
   }
   richTextEditorRef = React.createRef();
   // 加载二级分类数据
@@ -54,6 +59,36 @@ class SaveUpdate extends Component {
       this.setState({
         options: [...this.state.options],
       })
+    }
+  };
+  getCategories = async (parentId) => {
+    const result = await reqCategory(parentId);
+    if (result) {
+      if (parentId === '0') {
+        this.setState({
+          options: result.map((item) => {
+            return {
+              value: item._id,
+              label: item.name,
+              isLeaf: false,
+            }
+          })
+        })
+      } else {
+        this.setState({
+          options: this.state.options.map((item) => {
+            if (item.value === parentId) {
+              item.children = result.map((item) => {
+                return {
+                  value: item._id,
+                  label: item.name
+                }
+              })
+            }
+            return item;
+          })
+        })
+      }
     }
   };
   // 添加商品
@@ -89,6 +124,10 @@ class SaveUpdate extends Component {
   };
   render() {
     const { getFieldDecorator } = this.props.form;
+    const product = this.props.location.state;
+    // 如果product的值为undefined说明是通过点击添加商品进到该组件的
+    // 如果product有值为对象则说明是通过点击修改进入该组件的
+
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -100,7 +139,7 @@ class SaveUpdate extends Component {
       },
     };
     const {options} = this.state;
-    return <Card title={<div className='product-title'><Icon type='arrow-left' className='arrow-icon' onClick={this.goProduct}/><span>添加商品</span></div>}>
+    return <Card title={<div className='product-title'><Icon type='arrow-left' className='arrow-icon' onClick={this.goProduct}/>{product ? <span>修改商品</span> : <span>添加商品</span>}</div>}>
       <Form {...formItemLayout} onSubmit={this.addProduct}>
         <Item label='商品名称'>
           {
@@ -109,7 +148,8 @@ class SaveUpdate extends Component {
               {
                 rules:[
                   {required: true, message: '请输入商品名称'}
-                ]
+                ],
+                initialValue: product ? product.name : ''
               }
             )(
               <Input placeholder='请输入商品名称'/>
@@ -123,7 +163,8 @@ class SaveUpdate extends Component {
               {
                 rules:[
                   {required: true, message: '请输入商品描述'}
-                ]
+                ],
+                initialValue: product ? product.desc : ''
               }
             )(
               <Input placeholder='请输入商品描述'/>
@@ -138,7 +179,8 @@ class SaveUpdate extends Component {
               {
                 rules: [
                   {required: true, message: '请选择分类'}
-                ]
+                ],
+                initialValue: this.categoriesId
               }
             )(
               <Cascader
@@ -158,7 +200,8 @@ class SaveUpdate extends Component {
               {
                 rules: [
                   {required: true, message: '请输入商品价格'}
-                ]
+                ],
+                initialValue: product ? product.price : ''
               }
             )(
               <InputNumber
@@ -172,7 +215,7 @@ class SaveUpdate extends Component {
         </Item>
         <Item label='商品详情'></Item>
         <Item wrapperCol={{span:20}}>
-          <RichTextEditor ref={this.richTextEditorRef}/>
+          <RichTextEditor ref={this.richTextEditorRef} detail={product ? product.detail : ''}/>
 
           <Button type='primary' className='submit-button' htmlType="submit">提交</Button>
         </Item>
