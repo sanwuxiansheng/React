@@ -52,3 +52,6 @@ export const reqUpdataProduct = ({name, desc, price, categoryId, pCategoryId, de
 
 export const reqDeleteProductImg = ({name, id}) => ajax('/manage/img/delete', {name, id}, 'POST');
 export const reqSearchProduct = ({searchType, searchContent, pageSize, pageNum}) => ajax('/manage/product/search', {[searchType]: searchContent, pageSize, pageNum});
+
+// 请求商品状态
+export const reqUpdateProductStatus = (productId, status) => ajax('/manage/product/updateStatus', {productId, status}, 'POST');
