@@ -13,7 +13,12 @@ class AddRoleForm extends Component {
         <Item label='角色名称' labelCol={{span: 6}}  wrapperCol={{span: 15}}>
           {
             getFieldDecorator(
-              'name'
+              'name',
+              {
+                rules: [
+                  {required: true, message: '请输入角色名称!'}
+                ]
+              }
             )(
               <Input placeholder='请输入角色名称'/>
             )

@@ -55,3 +55,8 @@ export const reqSearchProduct = ({searchType, searchContent, pageSize, pageNum})
 
 // 请求商品状态
 export const reqUpdateProductStatus = (productId, status) => ajax('/manage/product/updateStatus', {productId, status}, 'POST');
+
+// 请求权限数据
+export const reqGetRoles = () => ajax('/manage/role/list');
+// 添加角色
+export const reqAddRole = (name) => ajax('/manage/role/add', {name}, 'POST');

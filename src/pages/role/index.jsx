@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Card, Button, Table, Radio, Modal } from 'antd';
+import { Card, Button, Table, Radio, Modal, message } from 'antd';
 import dayjs from 'dayjs';
 
 import AddRoleForm from './add-role-form';
 import UpdateRoleForm from './update-role-form';
+import {reqGetRoles, reqAddRole} from '../../api';
 
 const RadioGroup = Radio.Group;
 
@@ -11,7 +12,7 @@ export default class Role extends Component {
   state = {
     value: '',  //单选的默认值，也就是选中的某个角色的id值
     roles: [
-      {
+      /*{
         "menus": [
           "/home",
           "/products",
@@ -26,15 +27,22 @@ export default class Role extends Component {
         "__v": 0,
         "auth_time": 1561049701194,
         "auth_name": "admin"
-      }
+      }*/
     ], //权限数组
     isShowAddRoleModal: false, //是否展示创建角色的标识
     isShowUpdateRoleModal: false, //是否展示设置角色的标识
     isDisabled: true
   };
-  
+  // 请求权限用户数据
+  async componentDidMount() {
+    const result = await reqGetRoles()
+    this.setState({
+      roles: result
+    })
+  }
+
   onRadioChange = (e) => {
-    console.log('radio checked', e.target.value);
+    // console.log('radio checked', e.target.value);
     this.setState({
       value: e.target.value,
       isDisabled: false
@@ -46,7 +54,20 @@ export default class Role extends Component {
   };
   
   //创建角色的回调函数
-  addRole = () => {};
+  addRole = () => {
+    this.addRoleForm.props.form.validateFields(async (err, values) => {
+      if (!err) {
+        const result = await reqAddRole(values.name);
+        if (result) {
+          message.success('创建角色成功', 1);
+          this.setState({
+            roles: [...this.state.roles, result],
+            isShowAddRoleModal: false
+          })
+        }
+      }
+    })
+  };
   //设置角色权限的回调函数
   updateRole = () => {};
   
@@ -73,7 +94,7 @@ export default class Role extends Component {
       dataIndex: 'auth_name',
     }
     ];
-    
+    const role = roles.find((role) => role._id === value);
     return (
       <Card
         title={
@@ -106,7 +127,7 @@ export default class Role extends Component {
           okText='确认'
           cancelText='取消'
         >
-          <AddRoleForm wrappedComponentRef={(form) => this.addRoleForm = form}/>
+          <AddRoleForm wrappedComponentRef={(form) => this.addRoleForm = form} />
         </Modal>
   
         <Modal
@@ -117,7 +138,7 @@ export default class Role extends Component {
           okText='确认'
           cancelText='取消'
         >
-          <UpdateRoleForm wrappedComponentRef={(form) => this.updateRoleForm = form}/>
+          <UpdateRoleForm wrappedComponentRef={(form) => this.updateRoleForm = form} name={role ? role.name : ''}/>
         </Modal>
         
       </Card>

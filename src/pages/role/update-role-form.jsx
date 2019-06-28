@@ -1,48 +1,15 @@
 import React, {Component} from 'react';
 import {Form, Input, Tree} from 'antd';
-
+import menuList from '../../config/menu-config';
+import PropType from 'prop-types';
 const Item = Form.Item;
 const { TreeNode } = Tree;
 
-const treeData = [
-  {
-  title: '0-0',
-  key: '0-0',
-  children: [{
-    title: '0-0-0',
-    key: '0-0-0',
-    children: [
-      { title: '0-0-0-0', key: '0-0-0-0' },
-      { title: '0-0-0-1', key: '0-0-0-1' },
-      { title: '0-0-0-2', key: '0-0-0-2' },
-    ],
-  }, {
-    title: '0-0-1',
-    key: '0-0-1',
-    children: [
-      { title: '0-0-1-0', key: '0-0-1-0' },
-      { title: '0-0-1-1', key: '0-0-1-1' },
-      { title: '0-0-1-2', key: '0-0-1-2' },
-    ],
-  }, {
-    title: '0-0-2',
-    key: '0-0-2',
-  }],
-}, {
-  title: '0-1',
-  key: '0-1',
-  children: [
-    { title: '0-1-0-0', key: '0-1-0-0' },
-    { title: '0-1-0-1', key: '0-1-0-1' },
-    { title: '0-1-0-2', key: '0-1-0-2' },
-  ],
-}, {
-  title: '0-2',
-  key: '0-2',
-}
-];
 
 class UpdateRoleForm extends Component {
+  static propTypes = {
+    name: PropType.string.isRequired
+  };
   state = {
     expandedKeys: [],
     autoExpandParent: true,
@@ -93,7 +60,7 @@ class UpdateRoleForm extends Component {
             getFieldDecorator(
               'name',
               {
-                initialValue: ''
+                initialValue: this.props.name
               }
             )(
               <Input placeholder='请输入角色名称' disabled/>
@@ -103,15 +70,16 @@ class UpdateRoleForm extends Component {
         <Item>
           <Tree
             checkable
-            onExpand={this.onExpand}
-            expandedKeys={this.state.expandedKeys}
-            autoExpandParent={this.state.autoExpandParent}
+            // onExpand={this.onExpand}
+            // expandedKeys={this.state.expandedKeys}
+            // autoExpandParent={this.state.autoExpandParent}
             onCheck={this.onCheck}
             checkedKeys={this.state.checkedKeys}
-            onSelect={this.onSelect}
-            selectedKeys={this.state.selectedKeys}
+            // onSelect={this.onSelect}
+            // selectedKeys={this.state.selectedKeys}
+            defaultExpandAll={true}
           >
-            {this.renderTreeNodes(treeData)}
+            {this.renderTreeNodes(menuList)}
           </Tree>
         </Item>
       </Form>
