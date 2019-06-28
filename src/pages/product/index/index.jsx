@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import MyButton from "../../../components/my-button";
-import { Card, Button, Icon, Table, Select, Input } from "antd";
+import {Card, Button, Icon, Table, Select, Input, message} from "antd";
 import {reqProducts} from '../../../api';
 import './index.less';
+import {reqSearchProduct} from "../../../api";
 const { Option } = Select;
 export default class Index extends Component {
   state = {
     products: [], // 商品管理数据
     isLoading: true, // 是否显示loading图
-    total: 0
+    total: 0,
+    searchType: 'productName',
+    searchContent: '',
+    pageNum: 1,
+    pageSize: 3
   };
   componentDidMount() {
     this.getProducts(1, 3)
@@ -18,12 +23,23 @@ export default class Index extends Component {
     this.setState({
       loading: true
     });
-    const result = await reqProducts(pageNum, pageSize);
+    const { searchContent, searchType } = this.state;
+    let promise = null;
+    if (this.isSearch && searchContent) {
+      promise = reqSearchProduct({
+        searchType, searchContent, pageSize, pageNum
+      })
+    } else {
+      promise = reqProducts(pageNum, pageSize);
+    }
+    const result = await promise;
     if (result) {
       this.setState({
         total: result.total,
         products: result.list,
-        isLoading: false
+        isLoading: false,
+        pageNum,
+        pageSize
       })
     }
   };
@@ -33,6 +49,39 @@ export default class Index extends Component {
   showUpdateProduct = (product) => {
     return () => {
       this.props.history.push('/product/saveupdate', product)
+    }
+  };
+  // 收集搜索框数据
+  handleChange = (stateName) => {
+    return (e) => {
+      // console.log(e);
+      let value = '';
+      if (stateName === 'searchType') {
+        value = e; // 根据商品名称
+      } else {
+        value = e.target.value; // 根据商品描述
+        // console.log(value);
+        if (!value) this.isSearch = false;
+      }
+      // console.log(value); // value就是输入框中输入的值
+      this.setState({
+        [stateName]: value
+      })
+    }
+  };
+  // 收集搜索框中内容后发送请求
+  searchProduct = async () => {
+    // 收集数据
+    // console.log('出发了');
+    const { searchContent, pageSize, pageNum } = this.state;
+    // console.log(searchContent, pageSize, pageNum );
+    if (searchContent) {
+      // 判断通过发送请求请求数据
+      this.isSearch = true;
+      this.getProducts(pageNum, pageSize);
+
+    } else {
+      message.warn('请输入搜索内容~', 2);
     }
   };
   render() {
@@ -74,15 +123,15 @@ export default class Index extends Component {
     return <Card
     title={
       <div>
-        <Select defaultValue = {0}>
-          <Option key={0} value={0}>根据商品名称</Option>
-          <Option key={1} value={1}>根据商品描述</Option>
+        <Select defaultValue = "productName" onChange={this.handleChange('searchType')}>
+          <Option key={0} value="productName">根据商品名称</Option>
+          <Option key={1} value="productDesc">根据商品描述</Option>
         </Select>
-        <Input placeholder="关键字" className='search-input'/>
-        <Button type="primary">搜索</Button>
+        <Input placeholder="关键字" className='search-input' onChange={this.handleChange('searchContent')}/>
+        <Button type="primary" onClick={this.searchProduct}>搜索</Button>
       </div>
     }
-      extra={<Button type="primary" onClick={this.showAddProduct}><Icon type='plus'></Icon>添加产品</Button>}
+      extra={<Button type="primary" onClick={this.showAddProduct}><Icon type='plus'/>添加产品</Button>}
     >
       <Table
         columns={columns}
