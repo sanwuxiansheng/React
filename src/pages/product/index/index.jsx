@@ -46,9 +46,9 @@ export default class Index extends Component {
   showAddProduct = () => {
     this.props.history.push('/product/saveupdate')
   };
-  showUpdateProduct = (product) => {
+  showUpdateProduct = (path, product) => {
     return () => {
-      this.props.history.push('/product/saveupdate', product)
+      this.props.history.push(path, product)
     }
   };
   // 收集搜索框数据
@@ -135,8 +135,8 @@ export default class Index extends Component {
         title: '操作',
         render: (product) => {
           return <div>
-            <MyButton onClick={this.showUpdateProduct(product)}>详情</MyButton>
-            <MyButton onClick={this.showUpdateProduct(product)}>修改</MyButton>
+            <MyButton onClick={this.showUpdateProduct('/product/detail', product)}>详情</MyButton>
+            <MyButton onClick={this.showUpdateProduct('/product/saveupdate', product)}>修改</MyButton>
           </div>
         }
       },

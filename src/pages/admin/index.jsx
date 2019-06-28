@@ -42,7 +42,7 @@ export default class Admin extends Component {
           isLoading: false,
           success: true,
         })
-      };
+      }
     }
     this.setState({
       isLoading: false,

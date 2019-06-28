@@ -9,10 +9,9 @@ import draftToHtml from "draftjs-to-html";
 import {convertToRaw} from "draft-js";
 import PictureWall from "./picture-wall";
 
-
 const {Item} = Form;
-class SaveUpdate extends Component {
 
+class SaveUpdate extends Component {
   state = {
     options: [],
   };
@@ -228,14 +227,13 @@ class SaveUpdate extends Component {
         {product ? <Item label="商品图片" >
           <PictureWall imgs={product ? product.imgs : []} id={product ? product._id : ''}/>
         </Item> : ''}
-        <Item label='商品详情'></Item>
-        <Item wrapperCol={{span:20}}>
+        <Item label='商品详情' wrapperCol={{span:20}}>
           <RichTextEditor ref={this.richTextEditorRef} detail={product ? product.detail : ''}/>
-
-          <Button type='primary' className='submit-button' htmlType="submit">提交</Button>
         </Item>
+        <Item><Button type='primary' className='submit-button' htmlType="submit">提交</Button></Item>
       </Form>
     </Card>;
   }
 }
+
 export default Form.create()(SaveUpdate)
