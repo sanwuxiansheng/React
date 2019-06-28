@@ -21,17 +21,19 @@ export default class PicturesWall extends Component {
   handlePreview = async file => {
 
     this.setState({
-      previewImage: file.url || file.preview,
+      previewImage: file.url || file.thumbUrl,
       previewVisible: true,
     });
   };
-
+  // 上传图片
   handleChange = async ({ file, fileList }) => {
-    console.log(file);
+    // console.log(file);
     if (file.status === 'uploading') {
       // 图片上传中
     } else if (file.status === 'done') {
       // 图片上传成功
+      fileList[fileList.length - 1].name = file.response.data.name;
+      fileList[fileList.length - 1].url = file.response.data.url;
       message.success('上传图片成功~', 2);
     } else if (file.status === 'error') {
       // 图片上传失败
@@ -40,9 +42,10 @@ export default class PicturesWall extends Component {
       // 删除图片
       // 发送请求获取上传的图片数据并进行删除
       const id = this.props.id;
-      console.log(id);
+      // console.log(id);
+      // const name = (file.response && file.response.data.name) || file.name;
       const name = file.name;
-      console.log(name);
+      // console.log(name);
       const result = await reqDeleteProductImg(name, id);
       if (result) {
         message.success('删除图片成功~', 2);

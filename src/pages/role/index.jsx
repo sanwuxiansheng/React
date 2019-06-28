@@ -63,9 +63,11 @@ export default class Role extends Component {
     }, {
       title: '创建时间',
       dataIndex: 'create_time',
+      render: (time) => dayjs(time).format('YYYY-MM-DD HH-mm-ss')
     }, {
       title: '授权时间',
       dataIndex: 'auth_time',
+      render: (time) => time && dayjs(time).format('YYYY-MM-DD HH:mm:ss')
       }, {
       title: '授权人',
       dataIndex: 'auth_name',

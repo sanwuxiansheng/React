@@ -5,7 +5,7 @@ export default function ajax(url, data = {}, method = 'GET') {
   let reqParams = data;
   // 将请求方式所传入的参数全部统一转换成小写
   // 大写axios不认识会报错
-  method = method.toLocaleLowerCase();
+  method = method.toLowerCase();
   // 如果请求方式为get则将data数据改为对象{ params: data }
   if ( method === 'get') {
     reqParams = {

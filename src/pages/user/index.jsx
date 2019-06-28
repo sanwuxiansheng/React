@@ -17,6 +17,7 @@ export default class Role extends Component {
       role_id: "5c7d222c12d5e51908cc0380",
       username: "aaa"
     }], //用户数组
+    roles: [], // 权限数组
     isShowAddUserModal: false, //是否展示创建用户的标识
     isShowUpdateUserModal: false, //是否展示更新用户的标识
   };
@@ -91,18 +92,18 @@ export default class Role extends Component {
           title="创建用户"
           visible={isShowAddUserModal}
           onOk={this.addUser}
-          onCancel={this.toggleDisplay('isShowAddUserModal', true)}
+          onCancel={this.toggleDisplay('isShowAddUserModal', false)}
           okText='确认'
           cancelText='取消'
         >
-          <AddUserForm wrappedComponentRef={(form) => this.addUserForm = form}/>
+          <AddUserForm wrappedComponentRef={(form) => this.addUserForm = form} />
         </Modal>
   
         <Modal
           title="更新用户"
           visible={isShowUpdateUserModal}
           onOk={this.updateUser}
-          onCancel={this.toggleDisplay('isShowUpdateUserModal', true)}
+          onCancel={this.toggleDisplay('isShowUpdateUserModal', false)}
           okText='确认'
           cancelText='取消'
         >
